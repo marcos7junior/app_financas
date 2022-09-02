@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>App Finanças</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?				family=Roboto:wght@300;400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link href="/css/style.css" rel="stylesheet" type="text/css" />
+  </head>
+
+  <body>
+    <header class="cabecalho">
+      <h1 class="titulo">App Finanças</h1>
+    </header>
+
+    <main class="conteudo">
+      <h1 class="titulo-conteudo">Insira os dados:</h1>
+      <section class="formulario">
+        <nav class="entrada-dados">
+          <label for="descricao">DESCRIÇÃO</label>
+          <input type="text" id="descricao" placeholder="descreva uma entrada"/>
+          <label for="valor" class="valor">VALOR R$</label>
+          <input type="text" id="valor" placeholder="insira um valor aqui" />
+        </nav>
+
+        <div class="selecao">
+          <label class="selecao-receita" for="receita">&nbspRECEITA</label>
+          <input type="radio" id="receita" name="selecao-tipo" value="receita"checked/><br><br>
+          <label class="selecao-despesa" for="despesa">DESPESA</label>
+          <input type="radio" id="despesa" name="selecao-tipo" value="despesa"/>
+        </div>
+      </section>
+
+      <section class="tabela-apuracao">
+        <p class="botao-centro">
+          <button id="botao-adicionar">Adicionar</button>
+        </p>
+        <table id="tabela">
+          <thead>
+            <tr class="cabecalho-tabela">
+              <th>Descrição</th>
+              <th>Valor</th>
+              <th>Data</th>
+            </tr>
+          </thead>
+          <tfoot>
+            <tr>
+              <td colspan="2">Resultado</td>
+              <td id="resultado">0</td>
+            </tr>
+          </tfoot>
+        </table>
+      </section>
+    </main>
+
+    <script src="js/principal.js"></script>
+    <script
+      src="https://replit.com/public/js/replit-badge.js"
+      theme="blue"
+      defer
+    ></script>
+  </body>
+</html>
