@@ -1,0 +1,72 @@
+.content-wrapper{
+  margin-left: 0 !important;
+}
+
+.main-header{
+  margin-left: 0 !important;
+}
+
+.main-footer{
+  margin-left: 0 !important;
+}
+
+.logo-app{
+  max-width: 45px;
+}
+
+
+.header-transactions{
+  display: flex;
+  justify-content: space-between;
+}
+
+.select-type{
+  display: flex;
+  justify-content: space-around;
+}
+
+.btn-select{
+  width: 300px;
+  height: 70px;
+  background: rgb(99, 99, 99);
+  cursor: pointer;
+  margin-bottom: 20px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 24px;
+  color: aliceblue;
+  font-weight: 600;
+}
+
+.btn-select:hover{
+  width: 302px;
+  opacity: 0.5;
+}
+
+.users-entry{
+  display: flex;
+  gap: 10px;
+  justify-content: space-around;
+}
+
+.btnSelectEntry {
+  background: #28a745;
+}
+
+.btnSelectOutput{
+  background: #dc3545;
+}
+
+.badge2{
+  display: flex;
+  margin: 10px;
+  font-size: 75%;
+  font-weight: 700;
+  line-height: 1;
+  text-align: center;
+  white-space: nowrap;
+  border-radius: 0.25rem;
+  transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
