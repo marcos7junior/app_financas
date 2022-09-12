@@ -3,20 +3,22 @@ const tbody = document.querySelector('tbody');
 
 let selectTypeValue = 'entry';
 let transactions = [];
-let transactionsData = [];
 let countTransactions = 1;
+
+let balanceDash = 0;
+let entryDash = 0;
+let outputDash = 0;
 
 function main() {
   handleSelectType('entry');
-  console.log('transactions: ', transactions);
   transactions = getData('transactions') || [];
 
+  dashCalculator();
   generateTrs(transactions);
 }
 
 const getLastCountTransactions = () => {
   countTransactions = getData('count-transactions') || 1;
-  console.log('countTransactions: get: ', countTransactions);
   return countTransactions;
 };
 
@@ -65,12 +67,9 @@ const handleSubmit = (e) => {
     transaction.type = 'DESPESA';
   }
 
-  console.log('transaction: ', transaction);
-
   transactions.push(transaction);
   form.reset();
   countTransactions++;
-  console.log('countTransactions++: ', countTransactions);
   saveData('count-transactions', countTransactions);
   saveData('transactions', transactions);
   generateTrs(getData('transactions'));
@@ -84,12 +83,11 @@ const removeTransaction = () => {
   transactions = transactions.filter((transaction) => {
     return transaction.code !== inputCodeRemoveTransaction;
   });
+
   saveData('transactions', transactions);
 
   const trDelete = document.getElementById(`tr#${inputCodeRemoveTransaction}`);
 
-  const td = trDelete.childNodes[0].innerText;
-  console.log(td);
   tbody.removeChild(trDelete);
 };
 
@@ -135,7 +133,37 @@ const getData = (key) => {
 };
 
 const saveData = (key, value) => {
+  if (key === 'transactions') {
+    dashCalculator();
+  }
+
   window.localStorage.setItem(key, JSON.stringify(value));
+};
+
+const dashCalculator = () => {
+  balanceDash = 0
+  entryDash = 0
+  outputDash = 0
+
+  transactions.forEach((transaction) => {
+    if (transaction.type == 'RECEITA') {
+        console.log('RECEITA');
+        entryDash += Number(transaction.value);
+    }
+    else {
+      console.log('DESPESA');
+      outputDash += Number(transaction.value)
+    };
+
+    balanceDash = entryDash - outputDash;
+  });
+
+  document.getElementById('balanceDash').innerText = 
+    `R$ ${balanceDash.toFixed(2)}`;
+  document.getElementById('entryDash').innerText = 
+    `R$ ${entryDash.toFixed(2)}`;
+  document.getElementById('outputDash').innerText = 
+    `R$ ${outputDash.toFixed(2)}`;
 };
 
 main();
