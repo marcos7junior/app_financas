@@ -1,5 +1,5 @@
 import './App.css'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 type Transaction = {
   code: string,
@@ -33,15 +33,24 @@ function App() {
     outputDash: 0
   })
 
+  const form = useRef()
+
+
   useEffect(() => {
     console.log(dashValues);
   }, [dashValues])
 
   const handleSubmit = (e: any) => {
     e.preventDefault();
+
+    if (transaction.type === 'output') {
+      transaction.value = transaction.value * -1
+    }
+
     setTransactions([...transactions, transaction])
     console.log(transactions);
     dashCalculator()
+    e.target.reset()
   }
 
   const handleOnChange = (e: any) => {
@@ -56,28 +65,48 @@ function App() {
 
   const dashCalculator = () => {
 
-    let balance: number = 0
-    let entry: number = 0
-    let output: number = 0
+    let balanceDash: number = 0
+    let entryDash: number = 0
+    let outputDash: number = 0
 
-    transactions.forEach((transaction) => {
-      if (transaction.type == 'entry') {
-        if (Number(transaction.value)) {
-          entry = dashValues.entryDash
-          entry += Number(transaction.value)
-        }
+    const value = Number(transaction.value)
+    const type = transaction.type
+
+    let balanceArr: Array<any> = []
+    const entryArr: Array<any> = []
+    const outputArr: Array<any> = []
+
+
+    const addValue = (value: number, type: TypeTransaction) => {
+      if (type === 'entry') {
+        entryArr.push(Number(value))
+      } else {
+        outputArr.push(Number(value))
       }
-      else {
-        output = dashValues.outputDash
-        output += Number(transaction.value)
-      };
-      balance = entry - output
-    });
+    }
+
+    addValue(value, type)
+
+    transactions.map((t: Transaction) => {
+      addValue(t.value, t.type)
+    })
+
+    balanceArr = entryArr.concat(outputArr)
+
+
+
+    const sumTotal = (arr: Array<number>) => {
+      return arr.reduce((previousValue: number, currentVaue: number) => previousValue + currentVaue, 0)
+    }
+
+    balanceDash = sumTotal(balanceArr)
+    entryDash = sumTotal(entryArr)
+    outputDash = sumTotal(outputArr)
 
     setDashValues({
-      entryDash: entry,
-      outputDash: output,
-      balanceDash: balance
+      balanceDash,
+      entryDash,
+      outputDash
     })
   }
 
@@ -123,6 +152,66 @@ function App() {
     const min = new Date().getMinutes();
     return `${date} ${hour}:${min}`;
   };
+
+
+
+  const Header = (): any => {
+    return (
+      <div className="content-header">
+        <div className="container-fluid">
+          <div className="row mb-2">
+            <div className="col-sm-6">
+              <h1 className="m-0">Dashboard</h1>
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  const Dashboard = ({ balanceDash, entryDash, outputDash }: any) => {
+    return (
+      <div className="row">
+        <div className="col-lg-3 col-6">
+          <div className="small-box bg-info">
+            <div className="inner">
+              <h3 id="balanceDash">{balanceDash}</h3>
+              <p>Saldo Atual</p>
+            </div>
+            <div className="icon">
+              <i className="ion ion-bag"></i>
+            </div>
+          </div>
+        </div>
+
+        <div className="col-lg-3 col-6">
+          <div className="small-box bg-success">
+            <div className="inner">
+              <h3 id="entryDash">
+                {entryDash}<sup style={{ fontSize: '20px' }}></sup>
+              </h3>
+              <p>Receitas</p>
+            </div>
+            <div className="icon">
+              <i className="ion ion-stats-bars"></i>
+            </div>
+          </div>
+        </div>
+
+        <div className="col-lg-3 col-6">
+          <div className="small-box bg-danger">
+            <div className="inner">
+              <h3 id="outputDash">{outputDash}</h3>
+              <p>Despesas</p>
+            </div>
+            <div className="icon">
+              <i className="ion ion-person-add"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
 
   const Footer = () => {
     return (
@@ -323,58 +412,16 @@ function App() {
         </nav>
 
         <div className="content-wrapper">
-          <div className="content-header">
-            <div className="container-fluid">
-              <div className="row mb-2">
-                <div className="col-sm-6">
-                  <h1 className="m-0">Dashboard</h1>
-                </div>
-              </div>
-            </div>
-          </div>
+          <Header />
 
           <section className="content">
             <div className="container-fluid">
 
-              <div className="row">
-                <div className="col-lg-3 col-6">
-                  <div className="small-box bg-info">
-                    <div className="inner">
-                      <h3 id="balanceDash">150</h3>
-                      <p>Saldo Atual</p>
-                    </div>
-                    <div className="icon">
-                      <i className="ion ion-bag"></i>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="col-lg-3 col-6">
-                  <div className="small-box bg-success">
-                    <div className="inner">
-                      <h3 id="entryDash">
-                        53<sup style={{ fontSize: '20px' }}></sup>
-                      </h3>
-                      <p>Receitas</p>
-                    </div>
-                    <div className="icon">
-                      <i className="ion ion-stats-bars"></i>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="col-lg-3 col-6">
-                  <div className="small-box bg-danger">
-                    <div className="inner">
-                      <h3 id="outputDash">44</h3>
-                      <p>Despesas</p>
-                    </div>
-                    <div className="icon">
-                      <i className="ion ion-person-add"></i>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              <Dashboard
+                balanceDash={dashValues.balanceDash}
+                entryDash={dashValues.entryDash}
+                outputDash={dashValues.outputDash}
+              />
 
               <div className="row">
                 <section className="col-lg-5 connectedSortable ui-sortable">
