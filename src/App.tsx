@@ -79,15 +79,42 @@ function App() {
       outputDash: output,
       balanceDash: balance
     })
+  }
 
+  interface TableProps {
+    transactions: Array<Transaction>
+  }
 
+  const Table = ({ transactions }: TableProps) => {
+    return (
+      <table className="table table-striped">
+        <thead>
+          <tr>
+            <th style={{ width: '10px' }}>#</th>
+            <th>Nome</th>
+            <th>Valor</th>
+            <th>Data</th>
+            <th style={{ width: '40px' }}></th>
+          </tr>
+        </thead>
+        <tbody>
+          {transactions.map((t: Transaction, index) => {
+            return (<tr key={index}>
+              <td style={{ width: '10px' }}>{t.code}</td>
+              <td>{t.name}</td>
+              <td>{t.value}</td>
+              <td>{t.date}</td>
+              <td style={{ width: '40px' }}>{
+                t.type === 'entry'
+                  ? <span className={'tagsEntry'}>ENTRADA</span>
+                  : <span className={'tagsOutput'}>SAÍDA</span>
+              }</td>
+            </tr>)
+          })}
+        </tbody>
+      </table>
 
-    //   document.getElementById('balanceDash').innerText =
-    //     `R$ ${balanceDash.toFixed(2)}`;
-    //   document.getElementById('entryDash').innerText =
-    //     `R$ ${entryDash.toFixed(2)}`;
-    //   document.getElementById('outputDash').innerText =
-    //     `R$ ${outputDash.toFixed(2)}`;
+    )
   }
 
   const dateValidate = () => {
@@ -97,7 +124,17 @@ function App() {
     return `${date} ${hour}:${min}`;
   };
 
-
+  const Footer = () => {
+    return (
+      <footer className="main-footer">
+        <strong>Copyright © 2014-2022 <a href="">Cash App - Finances</a>.</strong>
+        All rights reserved.
+        <div className="float-right d-none d-sm-inline-block">
+          <b>Version</b> 3.2.0
+        </div>
+      </footer>
+    )
+  }
 
   // const transaction = {
   //   code: getLastCountTransactions(),
@@ -427,36 +464,7 @@ function App() {
                     </div>
 
                     <div className="card-body p-0">
-                      <table className="table table-striped">
-                        <thead>
-                          <tr>
-                            <th style={{ width: '10px' }}>#</th>
-                            <th>Nome</th>
-                            <th>Valor</th>
-                            <th>Data</th>
-                            <th style={{ width: '40px' }}></th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {
-                            <>
-                              {transactions.map((t: Transaction, index) => {
-                                return (<tr key={index}>
-                                  <td style={{ width: '10px' }}>{t.code}</td>
-                                  <td>{t.name}</td>
-                                  <td>{t.value}</td>
-                                  <td>{t.date}</td>
-                                  <td style={{ width: '40px' }}>{
-                                    t.type === 'entry'
-                                      ? <span className={'tagsEntry'}>ENTRADA</span>
-                                      : <span className={'tagsOutput'}>SAÍDA</span>
-                                  }</td>
-                                </tr>)
-                              })}
-                            </>
-                          }
-                        </tbody>
-                      </table>
+                      <Table transactions={transactions} />
                     </div>
                   </div>
                 </section>
@@ -465,13 +473,7 @@ function App() {
           </section>
         </div>
 
-        <footer className="main-footer">
-          <strong>Copyright © 2014-2022 <a href="">Cash App - Finances</a>.</strong>
-          All rights reserved.
-          <div className="float-right d-none d-sm-inline-block">
-            <b>Version</b> 3.2.0
-          </div>
-        </footer>
+        <Footer />
 
       </div>
     </div>
